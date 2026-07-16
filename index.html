@@ -1,0 +1,1671 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QuoteReady | Commercial Submission Readiness</title>
+  <meta name="description" content="Safely turn synthetic or redacted commercial insurance intake notes into an evidence-based readiness workup for human agency review.">
+  <meta property="og:title" content="QuoteReady | Commercial Submission Readiness">
+  <meta property="og:description" content="Analyze synthetic or redacted commercial intake for missing facts, follow-up questions, and human-review readiness.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://reactance0083.github.io/quoteready-validation/">
+  <meta property="og:image" content="https://reactance0083.github.io/quoteready-validation/assets/quoteready-preview.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f6b5b'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial' font-size='22' font-weight='700' fill='white'%3EQR%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202f;
+      --muted: #5a6575;
+      --line: #d9e0ea;
+      --paper: #ffffff;
+      --soft: #f4f7fb;
+      --soft-2: #eef6f0;
+      --accent: #0f6b5b;
+      --accent-dark: #0a4c41;
+      --warn: #9b4d22;
+      --danger: #9f3434;
+      --ok: #24734f;
+      --blue: #245f99;
+      --shadow: 0 16px 38px rgba(23, 32, 47, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled { cursor: wait; opacity: 0.65; }
+    :focus-visible { outline: 3px solid #2f78bc; outline-offset: 3px; }
+    .inline-error { display: none; margin-top: 10px; border-left: 4px solid var(--danger); background: #fff3f3; color: var(--danger); padding: 10px 12px; border-radius: 4px; }
+    .inline-error.visible { display: block; }
+    .copy-status { color: var(--ok); min-height: 1.5em; margin: 8px 0 0; }
+    .destination-address { user-select: all; font-weight: 800; overflow-wrap: anywhere; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      background: var(--accent);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .navlinks a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: calc(100vh - 68px);
+      display: grid;
+      gap: 24px;
+      align-items: start;
+      padding: 32px 0 42px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 6vw, 66px);
+      line-height: 1.02;
+      margin: 0 0 18px;
+      letter-spacing: 0;
+      max-width: 850px;
+    }
+
+    h2 {
+      font-size: clamp(27px, 4vw, 42px);
+      line-height: 1.1;
+      margin: 0 0 14px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 20px;
+      max-width: 760px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      min-height: 44px;
+      padding: 11px 16px;
+      border-radius: 7px;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn.primary:hover { background: var(--accent-dark); }
+
+    .btn.block {
+      width: 100%;
+    }
+
+    .btn.prominent {
+      min-height: 52px;
+      padding: 14px 20px;
+      font-size: 16px;
+      box-shadow: 0 14px 28px rgba(15, 107, 91, 0.22);
+    }
+
+    .trust-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .trust-item {
+      border: 1px solid var(--line);
+      background: var(--soft);
+      padding: 12px;
+      border-radius: 7px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .demo-hero-copy {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 22px;
+      align-items: end;
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      min-width: min(440px, 100%);
+    }
+
+    .proof-item {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px 12px;
+      background: var(--soft);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .proof-item strong {
+      display: block;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    .frame-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #f9fbfd;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 800;
+      color: var(--ok);
+    }
+
+    .status-dot::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--ok);
+    }
+
+    .frame-body {
+      padding: 18px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mini-item {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .score {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 6px;
+      font-weight: 800;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #e7ecf3;
+      overflow: hidden;
+      flex: 1;
+      min-width: 90px;
+    }
+
+    .fill {
+      height: 100%;
+      width: 38%;
+      background: var(--warn);
+    }
+
+    section {
+      padding: 70px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fff;
+      min-height: 170px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .demo-shell {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.82fr) minmax(440px, 1.18fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .panel.output-panel {
+      border-color: #b9c9d9;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-weight: 800;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 390px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 13px;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.45;
+    }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .output-block {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 7px;
+      padding: 13px;
+      min-height: 92px;
+    }
+
+    .output-block.summary {
+      background: #f7fbff;
+      border-color: #c8d7e8;
+    }
+
+    .result-intro {
+      margin: 0 0 14px;
+      padding: 12px 14px;
+      border-radius: 7px;
+      background: var(--soft);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .result-intro.generated {
+      background: #edf8f3;
+      border: 1px solid #b9dbc5;
+      color: var(--accent-dark);
+    }
+
+    .readiness-score {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .score-ring {
+      width: 86px;
+      height: 86px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--warn) var(--score, 28%), #e7ecf3 0);
+      color: var(--ink);
+      font-weight: 900;
+      position: relative;
+    }
+
+    .score-ring::after {
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 999px;
+      background: #fff;
+    }
+
+    .score-ring span {
+      position: relative;
+      z-index: 1;
+      font-size: 24px;
+    }
+
+    .copy-ready {
+      border-left: 4px solid var(--accent);
+    }
+
+    .output-block.score-card { border-left: 5px solid var(--warn); }
+    .output-block.missing-card { border-left: 5px solid var(--danger); }
+    .output-block.questions-card { border-left: 5px solid var(--blue); }
+    .output-block.concerns-card { border-left: 5px solid var(--warn); }
+    .output-block.next-card {
+      border-left: 5px solid var(--accent);
+      background: #fbfefc;
+    }
+
+    .output-block .label {
+      color: var(--ink);
+    }
+
+    .after-actions {
+      display: none;
+      margin-top: 16px;
+      border: 1px solid #b9dbc5;
+      background: var(--soft-2);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .after-actions.visible {
+      display: block;
+    }
+
+    .after-actions h3 {
+      font-size: 24px;
+    }
+
+    .output-block.wide {
+      grid-column: 1 / -1;
+    }
+
+    .output-block ul, .output-block ol {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+
+    .output-block li { margin: 5px 0; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      background: #fff3e8;
+      color: var(--warn);
+      border: 1px solid #f0d2b8;
+    }
+
+    .badge.ready {
+      background: var(--soft-2);
+      border-color: #c8e3d0;
+      color: var(--ok);
+    }
+
+    .badge.empty {
+      display: none;
+    }
+
+    .survey-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 11px 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .offer {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      background: #fff;
+      display: grid;
+      gap: 12px;
+    }
+
+    .price {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .confirmation {
+      display: none;
+      border: 1px solid #b9dbc5;
+      background: var(--soft-2);
+      border-radius: 8px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .confirmation.visible {
+      display: block;
+    }
+
+    .intake-fallback {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #b9dbc5;
+    }
+
+    .intake-fallback.visible {
+      display: grid;
+      gap: 10px;
+    }
+
+    .intake-packet {
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 220px;
+      overflow: auto;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer {
+      padding: 28px 0 44px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .fine-print {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .nav-cta {
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 9px 14px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 92% 10%, rgba(15, 107, 91, 0.12) 0, transparent 28%),
+        linear-gradient(180deg, #fbfcfa 0%, #f4f7f3 100%);
+    }
+
+    .hero-actions {
+      align-items: center;
+    }
+
+    .boundary {
+      max-width: 720px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--accent);
+      background: #fff;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      box-shadow: 0 12px 28px rgba(23, 32, 47, 0.06);
+    }
+
+    .hero-visual {
+      border: 1px solid #c8d8d1;
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 30px 70px rgba(21, 58, 48, 0.14);
+    }
+
+    .workflow-preview-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .workflow-preview-top span:last-child {
+      color: var(--accent);
+      font-size: 12px;
+    }
+
+    .score-preview {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 24px;
+      border-radius: 14px;
+      color: #fff;
+      background: var(--accent-dark);
+    }
+
+    .score-preview small,
+    .score-preview span {
+      display: block;
+      color: #bfe3d8;
+    }
+
+    .score-preview strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.15;
+    }
+
+    .preview-ring {
+      width: 90px;
+      height: 90px;
+      border: 12px solid rgba(255, 255, 255, 0.22);
+      border-top-color: #8fe0c5;
+      border-right-color: #8fe0c5;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .preview-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .preview-row b {
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    .preview-note {
+      margin-top: 12px;
+      padding: 15px;
+      border-radius: 12px;
+      color: var(--muted);
+      background: #f7f5ee;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .stage-head {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .stage-number {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .journey-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .journey-step {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+      box-shadow: 0 12px 28px rgba(23, 32, 47, 0.05);
+    }
+
+    .journey-step span {
+      color: #9aacaa;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .journey-step strong {
+      display: block;
+      margin: 18px 0 8px;
+      font-size: 18px;
+    }
+
+    .demo {
+      border-top: 0;
+      background: #102720;
+      color: #fff;
+    }
+
+    .demo .lead,
+    .demo .muted,
+    .demo .fine-print {
+      color: #b7c9c2;
+    }
+
+    .demo .section-head {
+      max-width: 860px;
+    }
+
+    .demo .panel {
+      border-color: #385047;
+      background: #17342b;
+    }
+
+    .demo .panel-header {
+      border-color: #385047;
+      background: #17342b;
+      color: #fff;
+    }
+
+    .demo textarea {
+      border-color: #456057;
+      color: #eaf4f0;
+      background: #102720;
+    }
+
+    .demo .output-panel {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.18);
+    }
+
+    .demo .output-panel .panel-header {
+      border-color: var(--line);
+      background: #f7f9f7;
+      color: var(--ink);
+    }
+
+    .demo-guidance,
+    .generation-status,
+    .completion-state {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .generation-status {
+      border-color: #bfd8cf;
+      background: #f1faf6;
+      color: var(--accent-dark);
+      font-weight: 800;
+    }
+
+    .completion-state {
+      display: none;
+      border-color: #c7d9ee;
+      background: #f1f6fc;
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .completion-state.visible {
+      display: block;
+    }
+
+    .choice-tag {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: var(--accent);
+      background: var(--soft-2);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .hero, .demo-hero-copy, .demo-shell, .offer-grid, .survey-form, .stage-head { grid-template-columns: 1fr; }
+      .cards, .trust-row, .output-grid, .journey-steps { grid-template-columns: 1fr; }
+      .proof-strip { grid-template-columns: 1fr; }
+      .hero { min-height: auto; }
+      .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+    }
+
+    @media (max-width: 480px) {
+      .container, .nav { width: min(100% - 20px, 1180px); }
+      .navlinks { gap: 10px; }
+      .hero-actions, .navlinks { width: 100%; }
+      .hero-actions .btn, .nav-cta { width: 100%; }
+      .hero-visual { padding: 14px; border-radius: 12px; }
+      .score-preview { align-items: flex-start; flex-direction: column; padding: 18px; }
+      .panel-header { align-items: flex-start; flex-direction: column; }
+      textarea { min-height: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <nav class="nav" aria-label="Primary">
+      <div class="brand"><span class="mark">QR</span><span>QuoteReady</span></div>
+      <div class="navlinks">
+        <a href="#analyzer">Demo</a>
+        <a href="#survey">Fit check</a>
+        <a href="#questions">Ask a question</a>
+        <a href="#offer">Beta or pilot</a>
+      </div>
+      <a class="nav-cta" href="#analyzer">Try the demo</a>
+    </nav>
+  </div>
+
+  <main>
+    <section class="container hero" id="demo">
+      <div class="demo-hero-copy">
+        <div>
+          <span class="stage-number">01</span>
+          <p class="eyebrow">Commercial intake workflow demonstration for independent P&amp;C agencies</p>
+          <h1>See how a sample intake can become a cleaner agency workup.</h1>
+          <p class="lead">
+            This public demonstration shows a fixed, synthetic example. The proprietary QuoteReady analyzer is not delivered to the browser.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary prominent" href="#analyzer">Try the demo</a>
+            <a class="btn" href="#problem">See the workflow</a>
+          </div>
+          <div class="boundary"><strong>Built for safe evaluation.</strong> Use synthetic or redacted text only. No AMS login, carrier access, payment, or insurance decision-making.</div>
+        </div>
+        <div class="hero-visual" aria-label="QuoteReady workflow preview">
+          <div class="workflow-preview-top"><span>Example output - not live data</span><span>Human review required</span></div>
+          <div class="score-preview">
+            <div><small>Submission readiness</small><strong>Needs review</strong><span>Example only</span></div>
+            <div class="preview-ring" aria-hidden="true"></div>
+          </div>
+          <div class="preview-row"><b>Checklist</b><span>missing items identified before handoff</span></div>
+          <div class="preview-row"><b>Questions</b><span>producer follow-up prompts prepared</span></div>
+          <div class="preview-note">Next action: request current payroll, loss runs, vehicle details, and current coverage before market review.</div>
+        </div>
+      </div>
+
+      <div class="demo-shell" id="analyzer" tabindex="-1">
+        <div class="panel">
+          <div class="panel-header">
+            <span>BEFORE: synthetic sample intake</span>
+            <button class="btn" type="button" id="resetSample">Reset demo</button>
+          </div>
+          <div class="panel-body">
+            <p class="demo-guidance">Review the fixed synthetic sample below, then reveal its precomputed example workup. This page does not analyze submitted text.</p>
+            <textarea id="submissionInput" aria-label="Fixed synthetic commercial submission example" readonly></textarea>
+            <p class="fine-print"><strong>Public demonstration boundary:</strong> no production extraction, scoring, heuristics, prompts, or decision rules run in this browser. Do not submit customer data.</p>
+            <button class="btn primary block" type="button" id="generateOutput">Show example workup</button>
+            <div class="generation-status" id="generationStatus" role="status" aria-live="polite">Ready to show the fixed example.</div>
+            <div class="inline-error" id="analyzerError" role="alert" tabindex="-1"></div>
+          </div>
+        </div>
+
+        <div class="panel output-panel">
+          <div class="panel-header">
+            <span>AFTER: copy-ready agency workup</span>
+            <span id="readinessBadge" class="badge empty"></span>
+          </div>
+          <div class="panel-body">
+            <p class="result-intro" id="resultIntro">Run the demo to transform the synthetic sample into a professional workup your team can review.</p>
+            <div class="completion-state" id="completionState">Demo complete. Review the generated workup below.</div>
+            <div class="hero-actions" id="workupActions" hidden>
+              <button class="btn" type="button" id="copyWorkup">Copy workup</button>
+              <span class="copy-status" id="copyWorkupStatus" role="status" aria-live="polite"></span>
+            </div>
+            <div class="output-grid" id="outputGrid">
+              <div class="output-block wide">
+                <div class="label">Your agency-ready output will appear here</div>
+                <p>Run the demo to convert the synthetic sample into a professional summary, readiness score, missing-info checklist, producer follow-up questions, underwriter concerns, and next actions.</p>
+              </div>
+            </div>
+            <div class="after-actions" id="afterActions">
+              <h3>Next action: send a fit signal</h3>
+              <p class="muted">If this kind of workup matches a real intake problem at your agency, answer the fit check. If not, use the question form or say where the demo missed.</p>
+              <div class="hero-actions">
+                <a class="btn primary" href="#survey">Yes - send a fit signal</a>
+                <a class="btn" href="#offer">Beta or pilot options</a>
+                <a class="btn" href="#questions">Ask a question</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="problem">
+      <div class="section-head stage-head">
+        <span class="stage-number">02</span>
+        <div>
+          <p class="eyebrow">Why this matters</p>
+          <h2>The expensive part is the messy handoff before anyone can quote.</h2>
+          <p class="lead">QuoteReady is not trying to make insurance decisions. It gives the agency a cleaner starting point so humans can decide the next action faster.</p>
+        </div>
+      </div>
+      <div class="journey-steps" aria-label="QuoteReady validation journey">
+        <div class="journey-step"><span>01</span><strong>Landing page</strong><p class="muted">A safe public page explains the workflow and starts with synthetic or redacted intake.</p></div>
+        <div class="journey-step"><span>02</span><strong>Demo generation</strong><p class="muted">The analyzer creates a score, missing-items list, concerns, and producer questions.</p></div>
+        <div class="journey-step"><span>03</span><strong>Fit check</strong><p class="muted">Operators identify role, volume, pain, buyer, and testing barriers.</p></div>
+        <div class="journey-step"><span>04</span><strong>Beta or pilot</strong><p class="muted">Qualified visitors can request beta or pilot information through the canonical intake path.</p></div>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <strong>Incomplete packets hide in plain sight</strong>
+          <p class="muted">A note can look actionable while missing loss runs, payroll, entity details, vehicle usage, property facts, or current coverage.</p>
+        </div>
+        <div class="card">
+          <strong>Every unclear handoff creates rework</strong>
+          <p class="muted">Producers, CSRs, account managers, and marketers burn time figuring out who has the next question and what to ask.</p>
+        </div>
+        <div class="card">
+          <strong>Human review stays in charge</strong>
+          <p class="muted">QuoteReady does not quote, place coverage, recommend limits, replace underwriting judgment, or provide insurance advice.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="survey">
+      <div class="section-head stage-head">
+        <span class="stage-number">03</span>
+        <div>
+          <p class="eyebrow">Fit check</p>
+          <h2>If this feels familiar, tell us where it hurts.</h2>
+          <p class="lead">This short fit check tells QuoteReady whether your agency has the rework problem this product is built to solve. No meeting, credentials, or private customer data.</p>
+        </div>
+      </div>
+
+      <form class="survey-form" id="fitSurvey">
+        <div class="field">
+          <label for="role">Your role</label>
+          <select id="role" name="role">
+            <option>Agency owner or principal</option>
+            <option>Operations manager</option>
+            <option>Commercial lines manager</option>
+            <option>Account manager</option>
+            <option>CSR</option>
+            <option>Producer</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="agencyType">Agency type</label>
+          <select id="agencyType" name="agencyType">
+            <option>Independent P&C agency</option>
+            <option>Independent agency with mixed P&C/benefits</option>
+            <option>Captive agency</option>
+            <option>Wholesale, MGA, or carrier</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="volume">How many commercial intake packets hit your team?</label>
+          <select id="volume" name="volume">
+            <option>1-5 submissions per month</option>
+            <option>6-20 submissions per month</option>
+            <option>21-50 submissions per month</option>
+            <option>51+ submissions per month</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="messiness">How often does intake arrive incomplete or unclear?</label>
+          <select id="messiness" name="messiness">
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Rarely</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="pain">How painful is the back-and-forth?</label>
+          <select id="pain" name="pain">
+            <option value="5">5 - Very painful</option>
+            <option value="4">4 - Painful</option>
+            <option value="3">3 - Noticeable</option>
+            <option value="2">2 - Mild</option>
+            <option value="1">1 - Not painful</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="buyer">Who would approve a pilot?</label>
+          <select id="buyer" name="buyer">
+            <option>Agency owner or principal</option>
+            <option>Operations leader</option>
+            <option>Commercial lines leader</option>
+            <option>Technology committee</option>
+            <option>Not sure</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="biggestDelay">What usually makes the file bounce back?</label>
+          <textarea id="biggestDelay" name="biggestDelay" rows="4">Missing loss runs, unclear operations, incomplete payroll or sales, vehicle details, prior coverage, and no single clean list of what to ask next.</textarea>
+        </div>
+
+        <div class="field full">
+          <label for="trustBarrier">What would stop your agency from testing this?</label>
+          <textarea id="trustBarrier" name="trustBarrier" rows="4">If it required unredacted client data, touched our AMS, claimed to make coverage decisions, or created more work than it removed.</textarea>
+        </div>
+
+        <div class="field full">
+          <button class="btn primary" type="submit">Send fit signal</button>
+        </div>
+      </form>
+      <div class="confirmation" id="surveyConfirmation">
+        <h3 id="surveyConfirmationTitle">Fit signal prepared.</h3>
+        <p id="surveyConfirmationText">Your answers are saved in this browser session. Send the prepared email packet so QuoteReady can receive the fit signal.</p>
+        <div class="intake-fallback" id="surveyEmailFallback">
+          <p>Send to <span class="destination-address">cw.allen0083+quoteready@gmail.com</span>. Opening email prepares a draft; it does not claim submission succeeded.</p>
+          <a class="btn primary" id="surveyEmailLink" href="#">Open email to submit fit check</a>
+          <button class="btn" type="button" data-copy-packet="surveyEmailPacket">Copy email packet</button>
+          <p class="fine-print">If your email app does not open, copy the packet and send it manually.</p>
+          <pre class="intake-packet" id="surveyEmailPacket"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="questions">
+      <div class="section-head stage-head">
+        <span class="stage-number">04</span>
+        <div>
+          <p class="eyebrow">Questions</p>
+          <h2>Ask the practical question that would stop you from testing.</h2>
+          <p class="lead">Send a product, privacy, pilot, or workflow question into the QuoteReady evidence queue. Written follow-up is the default.</p>
+        </div>
+      </div>
+
+      <form class="survey-form" id="questionForm">
+        <div class="field">
+          <label for="questionName">Name</label>
+          <input id="questionName" name="name" autocomplete="name" placeholder="Your name" required aria-required="true">
+        </div>
+        <div class="field">
+          <label for="questionEmail">Email</label>
+          <input id="questionEmail" name="email" type="email" autocomplete="email" placeholder="you@agency.com" required aria-required="true">
+        </div>
+        <div class="field">
+          <label for="questionTopic">Question type</label>
+          <select id="questionTopic" name="topic">
+            <option>Product fit</option>
+            <option>Privacy and redaction</option>
+            <option>Beta testing</option>
+            <option>Pilot process</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="questionAgency">Agency</label>
+          <input id="questionAgency" name="agency" placeholder="Agency name" required aria-required="true">
+        </div>
+        <div class="field full">
+          <label for="questionText">Question</label>
+          <textarea id="questionText" name="question" rows="5" placeholder="What would you need to know before testing QuoteReady?" required aria-required="true"></textarea>
+          <p class="fine-print">Do not include credentials, policy numbers, private client names, or unredacted insured information.</p>
+        </div>
+        <div class="field full">
+          <button class="btn primary" type="submit">Submit question</button>
+        </div>
+      </form>
+      <div class="confirmation" id="questionConfirmation">
+        <h3 id="questionConfirmationTitle">Question packet prepared.</h3>
+        <p id="questionConfirmationText">Your question is saved in this browser session. Send the prepared email packet so QuoteReady can receive it.</p>
+        <div class="intake-fallback" id="questionEmailFallback">
+          <p>Send to <span class="destination-address">cw.allen0083+quoteready@gmail.com</span>. Opening email prepares a draft; it does not claim submission succeeded.</p>
+          <a class="btn primary" id="questionEmailLink" href="#">Open email to submit question</a>
+          <button class="btn" type="button" data-copy-packet="questionEmailPacket">Copy email packet</button>
+          <p class="fine-print">If your email app does not open, copy the packet and send it manually.</p>
+          <pre class="intake-packet" id="questionEmailPacket"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="workflow">
+      <div class="section-head">
+        <p class="eyebrow">Self-serve workflow</p>
+        <h2>What happens after you raise your hand.</h2>
+        <p class="lead">QuoteReady keeps the next step simple: synthetic test first, redacted examples only after rules are clear, and pilot interest only when the workflow appears useful.</p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <strong>1. Test safely</strong>
+          <p class="muted">You start with synthetic examples. If the output is relevant, you can later test fully redacted examples under written rules.</p>
+        </div>
+        <div class="card">
+          <strong>2. Decide if a pilot is worth discussing in writing</strong>
+          <p class="muted">You can signal that a controlled pilot may be worth paying for. This page records intent only; payment is not active.</p>
+        </div>
+        <div class="card">
+          <strong>3. Help shape the first product</strong>
+          <p class="muted">Your answers show which missing items matter, who owns the workflow, and what would make QuoteReady worth using again.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="offer">
+      <div class="section-head stage-head">
+        <span class="stage-number">05</span>
+        <div>
+          <p class="eyebrow">Choose next step</p>
+          <h2>Choose the next step only if the demo earns it.</h2>
+          <p class="lead">If QuoteReady caught a real workflow pain, join the beta path or ask for controlled pilot information. If it did not, say so in the fit check.</p>
+        </div>
+      </div>
+
+      <div class="offer-grid">
+        <div class="offer">
+          <span class="choice-tag">Low commitment</span>
+          <div>
+            <h3>Beta test</h3>
+            <p class="muted">For agencies that want to see whether the readiness checklist fits real commercial intake work.</p>
+          </div>
+          <div class="price">$0</div>
+          <ul>
+            <li>Synthetic intake tests first</li>
+            <li>Readiness checklist and follow-up draft</li>
+            <li>Fully redacted packet testing only after written rules are accepted</li>
+            <li>No credentials or AMS access</li>
+          </ul>
+          <button class="btn block" type="button" data-choice="beta">Request beta test</button>
+        </div>
+
+        <div class="offer">
+          <span class="choice-tag">For qualified agencies</span>
+          <div>
+            <h3>Controlled pilot interest</h3>
+            <p class="muted">For agencies that believe this could reduce submission rework enough to justify a bounded paid test later.</p>
+          </div>
+          <div class="price">Intent</div>
+          <ul>
+            <li>Written pilot scope before payment</li>
+            <li>Up to 10 synthetic or fully redacted intake tests</li>
+            <li>Copy-ready summaries, missing-item checklists, and follow-up drafts</li>
+            <li>No final pricing, payment, client secrets, credentials, or carrier access</li>
+          </ul>
+          <button class="btn primary block" type="button" data-choice="pilot">Request pilot details</button>
+        </div>
+      </div>
+
+      <div class="survey-form" id="interestIdentity" aria-labelledby="interestIdentityHeading">
+        <div class="field full"><h3 id="interestIdentityHeading">Where should written beta or pilot information go?</h3></div>
+        <div class="field"><label for="interestName">Name</label><input id="interestName" autocomplete="name" required aria-required="true"></div>
+        <div class="field"><label for="interestAgency">Agency</label><input id="interestAgency" required aria-required="true"></div>
+        <div class="field"><label for="interestEmail">Email</label><input id="interestEmail" type="email" autocomplete="email" required aria-required="true"></div>
+        <div class="field full"><div class="inline-error" id="interestError" role="alert" tabindex="-1"></div></div>
+      </div>
+
+      <div class="confirmation" id="offerConfirmation">
+        <h3 id="offerTitle">Interest packet prepared.</h3>
+        <p id="offerText">Your interest is saved in this browser session. Send the prepared email packet so QuoteReady can receive it.</p>
+        <div class="intake-fallback" id="intentEmailFallback">
+          <p>Send to <span class="destination-address">cw.allen0083+quoteready@gmail.com</span>. Opening email prepares a draft; it does not claim submission succeeded.</p>
+          <a class="btn primary" id="intentEmailLink" href="#">Open email to submit interest</a>
+          <button class="btn" type="button" data-copy-packet="intentEmailPacket">Copy email packet</button>
+          <p class="fine-print">If your email app does not open, copy the packet and send it manually.</p>
+          <pre class="intake-packet" id="intentEmailPacket"></pre>
+        </div>
+        <p class="fine-print">Validation note: this page records intent. Payment, final pricing, and legal terms are not active here.</p>
+      </div>
+    </section>
+
+    <section class="container" id="faq">
+      <div class="section-head">
+        <p class="eyebrow">FAQ</p>
+        <h2>Common questions before testing QuoteReady.</h2>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <strong>Does QuoteReady replace producer or account manager judgment?</strong>
+          <p class="muted">No. QuoteReady identifies readiness gaps so your agency can decide the next human action.</p>
+        </div>
+        <div class="card">
+          <strong>Do I need to connect my AMS?</strong>
+          <p class="muted">No. This validation experience does not require AMS, carrier, email, or payment credentials.</p>
+        </div>
+        <div class="card">
+          <strong>Can I paste real client information?</strong>
+          <p class="muted">No. Use synthetic or fully redacted information only. Do not include client names, policy numbers, credentials, or private insured data.</p>
+        </div>
+        <div class="card">
+          <strong>Is pricing final?</strong>
+          <p class="muted">No. This page records beta and pilot interest. It does not process payment or set final pricing.</p>
+        </div>
+        <div class="card">
+          <strong>What counts as a strong validation signal?</strong>
+          <p class="muted">A qualified agency operator runs the demo, names a real rework problem, identifies the workflow owner, and requests beta or pilot information.</p>
+        </div>
+        <div class="card">
+          <strong>Will testing require a meeting?</strong>
+          <p class="muted">No. Written follow-up is the default. You can evaluate the demo and express interest from this page.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    QuoteReady is a validation-stage product experience. It does not provide legal, underwriting, carrier-placement, coverage, or compliance advice. Use synthetic or redacted information only.
+  </footer>
+
+  <script>
+    const sampleSubmission = `Subject: Renewal quote for metal shop
+
+Hi,
+
+We need to look at options for our business insurance renewal. We are a metal fabrication shop with 18 employees, 6 trucks, welding, custom fabrication, and a small warehouse. Renewal is next month and the owner asked whether we can get other quotes.
+
+I attached last year's policy and a vehicle list. Most truck use is local, but a few jobs are out of state. Payroll is probably around the same as last year, but I do not have the current number yet. Let me know what else you need.
+
+Thanks,
+Sample Prospect`;
+
+    const input = document.getElementById("submissionInput");
+    const outputGrid = document.getElementById("outputGrid");
+    const badge = document.getElementById("readinessBadge");
+    const afterActions = document.getElementById("afterActions");
+    const resultIntro = document.getElementById("resultIntro");
+    const generationStatus = document.getElementById("generationStatus");
+    const completionState = document.getElementById("completionState");
+    const urlParams = new URLSearchParams(window.location.search);
+    const prospectId = urlParams.get("prospect_id") || urlParams.get("prospect") || "";
+    const syntheticTestMode = urlParams.get("synthetic_test") === "1";
+    const intakeEmail = "cw.allen0083+quoteready@gmail.com";
+    input.value = sampleSubmission;
+
+    function fixedPublicDemoResult() {
+      return {
+        valid: true,
+        readiness_status: "needs_review",
+        readiness_score: 58,
+        facts: {business_type: "Metal fabrication or manufacturing"},
+        executive_summary: "The fixed synthetic example describes a metal fabrication shop with employees, vehicles, welding, a warehouse, and a near-term renewal. Several core details remain incomplete before a human agency review.",
+        score_explanation: "This score is precomputed for the fixed public example; it is not calculated in the browser.",
+        missing_information: ["Full legal entity name", "Physical and mailing address", "Current payroll", "Vehicle VINs and driver details", "Current carrier, premium, and limits", "Loss runs or claims history", "Exact renewal date"],
+        underwriter_concerns: ["Welding and fabrication operations require human review.", "Vehicle usage and out-of-state travel need confirmation.", "Current program and loss information are missing."],
+        producer_follow_up_questions: ["Can you confirm the legal entity and location?", "Can you provide current payroll, vehicle and driver details, and loss runs?", "What are the current carrier, premium, limits, and exact renewal date?"],
+        quoteready_next_actions: ["Request the listed missing facts.", "Route the completed, redacted packet to a qualified human agency reviewer."],
+        desired_coverage_lines: [],
+        system_suggested_lines: ["General liability", "Workers compensation", "Commercial auto", "Commercial property"],
+        human_review_caveat: "Fixed public demonstration only. This is not an underwriting decision, coverage recommendation, binding indication, or autonomous market submission. Human agency review is required."
+      };
+    }
+
+    function canCapture() {
+      if (window.location.hostname.endsWith("github.io")) {
+        return false;
+      }
+      return window.location.protocol === "http:" || window.location.protocol === "https:";
+    }
+
+    async function capture(endpoint, payload) {
+      const enriched = Object.assign({
+        prospect_id: prospectId,
+        source_page: "landing_page.html",
+        captured_from: window.location.href,
+        synthetic: syntheticTestMode,
+        test_run_id: syntheticTestMode ? "QR-DEMO-REPAIR-20260716T095600-0500" : undefined
+      }, payload || {});
+      if (!canCapture()) {
+        return {ok: false, localOnly: true};
+      }
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(enriched)
+        });
+        return await response.json();
+      } catch (error) {
+        return {ok: false, error: String(error)};
+      }
+    }
+
+    function packetValue(value) {
+      if (value === undefined || value === null || value === "") return "(blank)";
+      if (typeof value === "object") return JSON.stringify(value, null, 2);
+      return String(value);
+    }
+
+    function buildIntakePacket(responseType, payload) {
+      const enriched = Object.assign({
+        response_type: responseType,
+        prospect_id: prospectId || "unknown",
+        source_page: "public_github_pages",
+        source_url: window.location.href,
+        submitted_at: new Date().toISOString(),
+        synthetic: syntheticTestMode,
+        test_run_id: syntheticTestMode ? "QR-DEMO-REPAIR-20260716T095600-0500" : undefined
+      }, payload || {});
+      return [
+        "QuoteReady public intake",
+        "QUOTE_READY_INTAKE_V1",
+        `response_type: ${responseType}`,
+        `prospect_id: ${enriched.prospect_id}`,
+        `source_url: ${window.location.href}`,
+        `submitted_at: ${enriched.submitted_at}`,
+        `agency: ${packetValue(enriched.agency || enriched.questionAgency || enriched.agencyName)}`,
+        `contact_name: ${packetValue(enriched.name || enriched.questionName || enriched.contact_name)}`,
+        `contact_email: ${packetValue(enriched.email || enriched.questionEmail || enriched.contact_email)}`,
+        "",
+        "payload_json:",
+        JSON.stringify(enriched, null, 2),
+        "",
+        "Safety note: Do not include credentials, policy numbers, private client names, or unredacted insured information."
+      ].join("\n");
+    }
+
+    function prepareEmailIntake(responseType, payload, fallbackId, linkId, packetId) {
+      if (!responseType || !payload || Object.keys(payload).length === 0) throw new Error("A complete intake packet is required before email preparation.");
+      const subject = `[QuoteReady Intake] ${responseType} | ${prospectId || "unknown"}`;
+      const packet = buildIntakePacket(responseType, payload);
+      const href = `mailto:${intakeEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(packet)}`;
+      const link = document.getElementById(linkId);
+      const packetNode = document.getElementById(packetId);
+      const fallback = document.getElementById(fallbackId);
+      link.href = href;
+      packetNode.textContent = `To: ${intakeEmail}\nSubject: ${subject}\n\n${packet}`;
+      fallback.classList.add("visible");
+      return {href, packet};
+    }
+
+    async function copyText(text) {
+      if (!String(text || "").trim()) throw new Error("Nothing is available to copy.");
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return; }
+      const helper = document.createElement("textarea");
+      helper.value = text; helper.setAttribute("readonly", ""); helper.style.position = "fixed"; helper.style.opacity = "0";
+      document.body.appendChild(helper); helper.select();
+      if (!document.execCommand("copy")) throw new Error("Clipboard access was unavailable.");
+      helper.remove();
+    }
+
+    document.getElementById("copyWorkup").addEventListener("click", async (event) => {
+      const status = document.getElementById("copyWorkupStatus");
+      try { await copyText(event.currentTarget.dataset.workup || ""); status.textContent = "Workup copied."; }
+      catch (error) { status.textContent = "Copy failed. Select the workup text and copy it manually."; }
+    });
+
+    document.querySelectorAll("[data-copy-packet]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        try { await copyText(document.getElementById(button.dataset.copyPacket).textContent); button.textContent = "Email packet copied"; }
+        catch (error) { button.textContent = "Copy unavailable - select packet manually"; }
+      });
+    });
+
+    function escapeHtml(value) { return String(value == null ? "" : value).replace(/[&<>"']/g, (character) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[character])); }
+    function listMarkup(items, ordered = false) { if (!items || !items.length) return '<p class="muted">None identified from the submitted text.</p>'; const tag = ordered ? "ol" : "ul"; return `<${tag}>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</${tag}>`; }
+    function workupText(analysis) { return ["QuoteReady intake-readiness workup", `Score: ${analysis.readiness_score}`, `Status: ${analysis.readiness_status}`, `Business type: ${(analysis.facts || {}).business_type || "Not established"}`, `Summary: ${analysis.executive_summary}`, `Missing information:\n- ${(analysis.missing_information || []).join("\n- ") || "None identified"}`, `Concerns and uncertainties:\n- ${(analysis.underwriter_concerns || []).join("\n- ") || "None identified"}`, `Producer questions:\n- ${(analysis.producer_follow_up_questions || []).join("\n- ") || "None"}`, `Next actions:\n- ${(analysis.quoteready_next_actions || []).join("\n- ") || "None"}`, `Requested coverage lines: ${(analysis.desired_coverage_lines || []).join(", ") || "None stated"}`, `System-suggested lines for human review: ${(analysis.system_suggested_lines || []).join(", ") || "None"}`, analysis.human_review_caveat].join("\n\n"); }
+
+    function renderAnalysis(analysis) {
+      if (!analysis || analysis.valid === false) { resetOutput(); const error = document.getElementById("analyzerError"); error.textContent = (analysis && analysis.validation_message) || "QuoteReady could not analyze this text."; error.classList.add("visible"); generationStatus.textContent = "No workup was created."; error.focus(); return; }
+      const readiness = analysis.readiness_status === "ready_for_agency_review"
+        ? "Ready for agency review"
+        : analysis.readiness_status === "needs_review"
+          ? "Needs review"
+          : "Not quote-ready yet";
+      const missing = analysis.missing_information || [];
+      const score = analysis.readiness_score || 0;
+      const concerns = analysis.underwriter_concerns || [];
+      const nextActions = analysis.quoteready_next_actions || [];
+      badge.textContent = `${readiness} - ${score}`;
+      badge.className = analysis.readiness_status === "ready_for_agency_review" ? "badge ready" : "badge";
+      resultIntro.textContent = "This is a fixed example of the workup format. No proprietary analyzer logic ran in your browser.";
+      resultIntro.classList.add("generated");
+      generationStatus.textContent = "Fixed example displayed. No browser analysis was performed.";
+      completionState.classList.add("visible");
+      outputGrid.innerHTML = `
+        <div class="output-block wide summary copy-ready">
+          <div class="label">Executive Summary</div>
+          <p>${escapeHtml(analysis.executive_summary || analysis.account_summary)}</p>
+        </div>
+        <div class="output-block wide score-card">
+          <div class="label">Submission Readiness Score</div>
+          <div class="readiness-score">
+            <div class="score-ring" style="--score: ${score}%"><span>${score}</span></div>
+            <p><strong>${escapeHtml(readiness)}</strong><br>${escapeHtml(analysis.score_explanation)}</p>
+          </div>
+        </div>
+        <div class="output-block missing-card">
+          <div class="label">Missing Information Checklist</div>
+          ${listMarkup(missing)}
+        </div>
+        <div class="output-block concerns-card">
+          <div class="label">Underwriter Concerns</div>
+          ${listMarkup(concerns)}
+        </div>
+        <div class="output-block wide questions-card">
+          <div class="label">Producer Follow-Up Questions</div>
+          ${listMarkup(analysis.producer_follow_up_questions || [], true)}
+        </div>
+        <div class="output-block wide next-card">
+          <div class="label">QuoteReady Next Actions</div>
+          ${listMarkup(nextActions, true)}
+        </div>
+        <div class="output-block wide">
+          <div class="label">Coverage lines stated by the submitter</div><p>${escapeHtml((analysis.desired_coverage_lines || []).join(", ") || "None stated")}</p>
+          <div class="label">Possible lines flagged for human review</div><p>${escapeHtml((analysis.system_suggested_lines || []).join(", ") || "None")}</p>
+          <p class="fine-print">${escapeHtml(analysis.human_review_caveat)}</p>
+        </div>
+      `;
+      afterActions.classList.add("visible");
+      document.getElementById("workupActions").hidden = false;
+      document.getElementById("copyWorkup").dataset.workup = workupText(analysis);
+      document.querySelector(".output-panel").scrollIntoView({behavior: "smooth", block: "start"});
+      const demoResult = {
+        generatedAt: new Date().toISOString(),
+        prospect_id: prospectId,
+        readiness,
+        readiness_score: analysis.readiness_score || 0,
+        missing,
+        desiredCoverageLines: analysis.desired_coverage_lines || [], systemSuggestedLines: analysis.system_suggested_lines || [], synthetic: true
+      };
+      localStorage.setItem("quoteready_last_result", JSON.stringify(demoResult));
+      capture("/api/demo-result", demoResult);
+    }
+
+    function resetOutput() {
+      localStorage.removeItem("quoteready_last_result");
+      badge.textContent = "";
+      badge.className = "badge empty";
+      resultIntro.textContent = "Show the fixed demonstration workup for the synthetic sample.";
+      resultIntro.classList.remove("generated");
+      generationStatus.textContent = "Ready to show the fixed example.";
+      completionState.classList.remove("visible");
+      document.getElementById("analyzerError").textContent = "";
+      document.getElementById("analyzerError").classList.remove("visible");
+      document.getElementById("workupActions").hidden = true;
+      document.getElementById("copyWorkup").dataset.workup = "";
+      document.getElementById("copyWorkupStatus").textContent = "";
+      outputGrid.innerHTML = `
+        <div class="output-block wide">
+          <div class="label">Your agency-ready output will appear here</div>
+          <p>Show the fixed example to preview the summary, readiness presentation, missing-info checklist, producer follow-up questions, concerns, and next actions.</p>
+        </div>
+      `;
+      afterActions.classList.remove("visible");
+    }
+
+    async function generateResult() {
+      const button = document.getElementById("generateOutput");
+      button.disabled = true; button.setAttribute("aria-busy", "true"); button.textContent = "Preparing example...";
+      generationStatus.textContent = "Preparing the fixed demonstration workup...";
+      completionState.classList.remove("visible");
+      document.getElementById("analyzerError").classList.remove("visible");
+      try { await new Promise((resolve) => window.setTimeout(resolve, 60)); renderAnalysis(fixedPublicDemoResult()); }
+      finally { button.disabled = false; button.removeAttribute("aria-busy"); button.textContent = "Show example workup"; }
+      return;
+    }
+
+    document.getElementById("generateOutput").addEventListener("click", generateResult);
+    document.getElementById("resetSample").addEventListener("click", () => {
+      input.value = sampleSubmission;
+      resetOutput();
+    });
+
+    document.getElementById("fitSurvey").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+      data.savedAt = new Date().toISOString();
+      data.demo_result = JSON.parse(localStorage.getItem("quoteready_last_result") || "{}");
+      localStorage.setItem("quoteready_fit_check", JSON.stringify(data));
+      const surveyCapture = await capture("/api/survey", data);
+      document.getElementById("surveyConfirmationTitle").textContent = surveyCapture && surveyCapture.ok
+        ? "Fit signal received."
+        : "Fit signal prepared.";
+      document.getElementById("surveyConfirmationText").textContent = surveyCapture && surveyCapture.ok
+        ? "QuoteReady confirmed durable receipt of your fit signal for evidence review."
+        : "Your answers are saved in this browser session. Send the prepared email packet so QuoteReady can receive the fit signal.";
+      if (!(surveyCapture && surveyCapture.ok)) {
+        prepareEmailIntake("survey", data, "surveyEmailFallback", "surveyEmailLink", "surveyEmailPacket");
+      }
+      document.getElementById("surveyConfirmation").classList.add("visible");
+      document.getElementById("offer").scrollIntoView({behavior: "smooth"});
+    });
+
+    document.getElementById("questionForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const question = document.getElementById("questionText");
+      question.setCustomValidity(question.value.trim() ? "" : "Enter a question before preparing the packet.");
+      if (!event.currentTarget.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+      data.savedAt = new Date().toISOString();
+      data.status = "new";
+      localStorage.setItem("quoteready_last_question", JSON.stringify(data));
+      const questionCapture = await capture("/api/question", data);
+      document.getElementById("questionConfirmationTitle").textContent = questionCapture && questionCapture.ok
+        ? "Question received."
+        : "Question packet prepared.";
+      document.getElementById("questionConfirmationText").textContent = questionCapture && questionCapture.ok
+        ? "QuoteReady confirmed durable receipt of your question for written follow-up."
+        : "Your question is saved in this browser session. Send the prepared email packet so QuoteReady can receive it.";
+      if (!(questionCapture && questionCapture.ok)) {
+        prepareEmailIntake("customer_question", data, "questionEmailFallback", "questionEmailLink", "questionEmailPacket");
+      }
+      document.getElementById("questionConfirmation").classList.add("visible");
+    });
+
+    document.querySelectorAll("[data-choice]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const name = document.getElementById("interestName");
+        const agency = document.getElementById("interestAgency");
+        const email = document.getElementById("interestEmail");
+        const error = document.getElementById("interestError");
+        const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+        if (!name.value.trim() || !agency.value.trim() || !validEmail) {
+          error.textContent = "Enter your name, agency, and a valid email before preparing beta or pilot interest.";
+          error.classList.add("visible"); error.focus(); return;
+        }
+        error.textContent = ""; error.classList.remove("visible");
+        const choice = button.getAttribute("data-choice");
+        const nextStep = {
+          choice,
+          name: name.value.trim(), agency: agency.value.trim(), email: email.value.trim(),
+          selectedAt: new Date().toISOString(),
+          fit_check: JSON.parse(localStorage.getItem("quoteready_fit_check") || "{}"),
+          demo_result: JSON.parse(localStorage.getItem("quoteready_last_result") || "{}")
+        };
+        localStorage.setItem("quoteready_next_step", JSON.stringify(nextStep));
+        const intentCapture = await capture(choice === "pilot" ? "/api/intent/pilot" : "/api/intent/beta", nextStep);
+        const title = document.getElementById("offerTitle");
+        const text = document.getElementById("offerText");
+        if (choice === "pilot") {
+          title.textContent = intentCapture && intentCapture.ok
+            ? "Controlled pilot interest received."
+            : "Interest packet prepared.";
+          text.textContent = intentCapture && intentCapture.ok
+            ? "QuoteReady confirmed durable receipt of your controlled pilot interest. The next step is written pilot information and an approved payment path later."
+            : "Your controlled pilot interest is saved in this browser session. Send the prepared email packet so QuoteReady can receive it.";
+          if (!(intentCapture && intentCapture.ok)) {
+            prepareEmailIntake("pilot_interest", nextStep, "intentEmailFallback", "intentEmailLink", "intentEmailPacket");
+          }
+        } else {
+          title.textContent = intentCapture && intentCapture.ok
+            ? "Beta interest received."
+            : "Interest packet prepared.";
+          text.textContent = intentCapture && intentCapture.ok
+            ? "QuoteReady confirmed durable receipt of your beta interest. The next step is beta enrollment and redacted-sample instructions."
+            : "Your beta interest is saved in this browser session. Send the prepared email packet so QuoteReady can receive it.";
+          if (!(intentCapture && intentCapture.ok)) {
+            prepareEmailIntake("beta_interest", nextStep, "intentEmailFallback", "intentEmailLink", "intentEmailPacket");
+          }
+        }
+        document.getElementById("offerConfirmation").classList.add("visible");
+      });
+    });
+
+    resetOutput();
+  </script>
+</body>
+</html>

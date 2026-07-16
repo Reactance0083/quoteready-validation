@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">QuoteReady commercial submission readiness</title>
+  <desc id="desc">QuoteReady wordmark and a short description of the synthetic commercial intake analyzer.</desc>
+  <rect width="1200" height="630" fill="#f4f7fb"/>
+  <rect x="72" y="72" width="1056" height="486" rx="28" fill="#fff" stroke="#d9e0ea" stroke-width="4"/>
+  <rect x="130" y="132" width="96" height="96" rx="20" fill="#0f6b5b"/>
+  <text x="178" y="194" text-anchor="middle" font-family="Arial, sans-serif" font-size="38" font-weight="700" fill="#fff">QR</text>
+  <text x="260" y="194" font-family="Arial, sans-serif" font-size="54" font-weight="700" fill="#17202f">QuoteReady</text>
+  <text x="130" y="300" font-family="Arial, sans-serif" font-size="48" font-weight="700" fill="#17202f">Commercial intake readiness,</text>
+  <text x="130" y="360" font-family="Arial, sans-serif" font-size="48" font-weight="700" fill="#0f6b5b">grounded in submitted facts.</text>
+  <text x="130" y="446" font-family="Arial, sans-serif" font-size="28" fill="#5a6575">Synthetic or redacted data only · Human agency review required</text>
+</svg>
